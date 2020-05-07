@@ -57,7 +57,13 @@ class Event
         $event->calendarId = static::getGoogleCalendar($calendarId)->getCalendarId();
 
         foreach ($properties as $name => $value) {
-            $event->$name = $value;
+            if ($name == 'addAttendees') {
+                foreach ($value as $attendee) {
+                    $event->addAttendee(['email' => $attendee]);
+                }
+            } else {
+                $event->$name = $value;
+            }
         }
 
         return $event->save('insertEvent', $optParams);
